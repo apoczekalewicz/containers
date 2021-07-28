@@ -1,4 +1,4 @@
-FROM ubi8
+FROM registry.access.redhat.com/ubi8
 
 RUN 	yum install -y krb5-workstation && \
 	mkdir /krb5 && chmod 755 /krb5
