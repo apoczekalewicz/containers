@@ -1,0 +1,47 @@
+apiVersion: apps.openshift.io/v1
+kind: DeploymentConfig
+metadata:
+  name: kerberos-app
+spec:
+  replicas: 1
+  selector:
+    app: kerberos-app
+  template:
+    metadata:
+      labels:
+        app: "kerberos-app"
+      annotations:
+        alpha.image.policy.openshift.io/resolve-names: '*'
+    spec:
+      containers:
+
+      - name: kerberos-sidecar
+        env:
+        - name: PERIOD_SECONDS
+          value: "10"
+        image: kerberos-sidecar:latest
+        volumeMounts:
+         - mountPath: /krb5
+           name: keytab
+         - mountPath: /dev/shm
+           name: ccache
+
+      - name: kerberos-app
+        image: kerberos-sidecar:latest
+        command:
+        - /bin/sh
+        - -c
+        - 'while true; do echo "*** checking if authenticated"; klist ; sleep 5; done'
+        volumeMounts:
+        - mountPath: /dev/shm
+          name: ccache
+
+      volumes:
+      - emptyDir:
+        medium: Memory
+        name: ccache
+      - configMap:
+          defaultMode: 420
+          name: keytab
+        name: keytab
+
