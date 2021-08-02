@@ -1,0 +1,14 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: system:openshift:scc:rootscc
+rules:
+- apiGroups:
+  - security.openshift.io
+  resourceNames:
+  - rootscc
+  resources:
+  - securitycontextconstraints
+  verbs:
+  - use
+
