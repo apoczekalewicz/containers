@@ -1,0 +1,17 @@
+kind: Service
+metadata:
+  name: httpd-demo
+spec:
+  selector:           
+    deployment: httpd-demo
+  type: ClusterIP
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: 8080
+  - name: https
+    port: 443
+    protocol: TCP
+    targetPort: 8443
+
