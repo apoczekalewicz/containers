@@ -1,0 +1,99 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ipfailover-keepalived 
+  labels:
+    ipfailover: hello-openshift
+spec:
+  strategy:
+    type: Recreate
+  replicas: 2
+  selector:
+    matchLabels:
+      ipfailover: hello-openshift
+  template:
+    metadata:
+      labels:
+        ipfailover: hello-openshift
+    spec:
+      serviceAccountName: ipfailover
+      privileged: true
+      hostNetwork: true
+      nodeSelector:
+        node-role.kubernetes.io/worker: ""
+      containers:
+      - name: openshift-ipfailover
+        #        image: quay.io/openshift/ose-keepalived-ipfailover:latest
+        image: registry.redhat.io/openshift4/ose-keepalived-ipfailover:latest
+        ports:
+        - containerPort: 63000
+          hostPort: 63000
+        imagePullPolicy: IfNotPresent
+        securityContext:
+          privileged: true
+        volumeMounts:
+        - name: lib-modules
+          mountPath: /lib/modules
+          readOnly: true
+        - name: host-slash
+          mountPath: /host
+          readOnly: true
+          mountPropagation: HostToContainer
+        - name: etc-sysconfig
+          mountPath: /etc/sysconfig
+          readOnly: true
+          #- name: config-volume
+          #mountPath: /etc/keepalive
+        env:
+        - name: OPENSHIFT_HA_CONFIG_NAME
+          value: "ipfailover"
+        - name: OPENSHIFT_HA_VIRTUAL_IPS 
+          value: "1.1.1.1-2"
+        - name: OPENSHIFT_HA_VIP_GROUPS 
+          value: "10"
+        - name: OPENSHIFT_HA_NETWORK_INTERFACE 
+          value: "enp3s0" #The host interface to assign the VIPs
+        - name: OPENSHIFT_HA_MONITOR_PORT 
+          value: "0"
+        - name: OPENSHIFT_HA_VRRP_ID_OFFSET 
+          value: "0"
+        - name: OPENSHIFT_HA_REPLICA_COUNT 
+          value: "2" #Must match the number of replicas in the deployment
+        - name: OPENSHIFT_HA_USE_UNICAST
+          value: "false"
+        #- name: OPENSHIFT_HA_UNICAST_PEERS
+          #value: "10.0.148.40,10.0.160.234,10.0.199.110"
+        - name: OPENSHIFT_HA_IPTABLES_CHAIN 
+          value: "INPUT"
+        #- name: OPENSHIFT_HA_NOTIFY_SCRIPT 
+        #  value: /etc/keepalive/mynotifyscript.sh
+        #        - name: OPENSHIFT_HA_CHECK_SCRIPT 
+        #          value: "/etc/keepalive/mycheckscript.sh"
+        - name: OPENSHIFT_HA_PREEMPTION 
+          value: "preempt_delay 300"
+        - name: OPENSHIFT_HA_CHECK_INTERVAL 
+          value: "2"
+        livenessProbe:
+          initialDelaySeconds: 10
+          exec:
+            command:
+            - pgrep
+            - keepalived
+      volumes:
+      - name: lib-modules
+        hostPath:
+          path: /lib/modules
+      - name: host-slash
+        hostPath:
+          path: /
+      - name: etc-sysconfig
+        hostPath:
+          path: /etc/sysconfig
+      # config-volume contains the check script
+      # created with `oc create configmap keepalived-checkscript --from-file=mycheckscript.sh`
+      #      - configMap:
+      #   defaultMode: 0755
+      #   name: keepalived-checkscript
+      # name: config-volume
+      imagePullSecrets:
+        - name: openshift-pull-secret 
