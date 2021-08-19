@@ -1,0 +1,15 @@
+apiVersion: network.openshift.io/v1
+kind: EgressNetworkPolicy
+metadata:
+  name: default
+spec:
+  egress: 
+  - type: Allow
+    to:
+      cidrSelector: 212.0.0.0/8
+  - type: Allow
+    to:
+      dnsName: redhat.tv
+  - type: Deny
+    to:
+      cidrSelector: 0.0.0.0/0
