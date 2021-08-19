@@ -1,0 +1,16 @@
+apiVersion: nmstate.io/v1beta1
+kind: NodeNetworkConfigurationPolicy
+metadata:
+  name: vlan102
+spec:
+  nodeSelector: 
+    kubernetes.io/hostname: ocp2-cj9v7-worker-0-s8prz
+  desiredState:
+    interfaces:
+    - name: enp3s0.102
+      description: VLAN
+      type: vlan 
+      state: absent
+      vlan:
+        base-iface: enp3s0
+        id: 102 

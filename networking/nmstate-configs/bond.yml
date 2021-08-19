@@ -1,0 +1,25 @@
+apiVersion: nmstate.io/v1beta1
+kind: NodeNetworkConfigurationPolicy
+metadata:
+  name: bond
+spec:
+  nodeSelector: 
+  #    kubernetes.io/hostname: ocp2-cj9v7-worker-0-xqhrf
+    bond: 'true'
+  desiredState:
+    interfaces:
+    - name: bond0 
+      description: Bond
+      type: bond 
+      state: up
+      ipv4:
+        dhcp: true 
+        enabled: true 
+      link-aggregation:
+        mode: active-backup 
+        options:
+          miimon: '140' 
+        slaves: 
+        - enp3s0
+        - enp9s0
+      mtu: 1450 

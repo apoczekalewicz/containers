@@ -1,0 +1,22 @@
+apiVersion: nmstate.io/v1beta1
+kind: NodeNetworkConfigurationPolicy
+metadata:
+  name: br1-enp9s0
+spec:
+  nodeSelector: 
+    node-role.kubernetes.io/worker: "" 
+  desiredState:
+    interfaces:
+      - name: br1
+        description: Linux bridge
+        type: linux-bridge
+        state: absent
+        ipv4:
+          dhcp: true
+          enabled: true
+        bridge:
+          options:
+            stp:
+              enabled: false
+          port:
+            - name: enp9s0
