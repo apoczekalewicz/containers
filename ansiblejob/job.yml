@@ -1,0 +1,10 @@
+---
+apiVersion: tower.ansible.com/v1alpha1
+kind: AnsibleJob
+metadata:
+  name: test
+spec:
+  tower_auth_secret: toweraccess
+  job_template_name: 'test'
+  extra_vars:
+    app_name: test
