@@ -1,0 +1,97 @@
+---
+apiVersion: image.openshift.io/v1
+kind: ImageStream
+metadata:
+  name: acm-grc-ansible-example
+  namespace: acm-grc-ansible-example
+  labels:
+    app: acm-grc-ansible-example
+spec:
+  tags:
+  - name: latest
+    importPolicy:
+      scheduled: true
+    from:
+      kind: DockerImage
+      name: quay.io/centos7/httpd-24-centos7
+
+---
+apiVersion: apps.openshift.io/v1
+kind: DeploymentConfig
+metadata:
+  name: acm-grc-ansible-example
+  namespace: acm-grc-ansible-example
+  labels:
+    app: acm-grc-ansible-example
+spec:
+  replicas: 1
+  selector:
+    app: acm-grc-ansible-example
+  template:
+    metadata:
+      labels:
+        app: acm-grc-ansible-example
+    spec:
+      containers:
+      - name: acm-grc-ansible-example
+        ports:
+        - containerPort: 8080
+        - containerPort: 8443
+        volumeMounts:
+          - name: cert
+            mountPath: /etc/httpd/tls
+            readOnly: true
+      volumes:
+        - name: cert
+          secret:
+            secretName: certs
+            items:
+              - key: tls.crt
+                path: localhost.crt
+              - key: tls.key
+                path: localhost.key
+  triggers:
+  - type: ConfigChange
+  - type: ImageChange
+    imageChangeParams:
+      automatic: true
+      containerNames:
+        - acm-grc-ansible-example
+      from:
+        kind: ImageStreamTag
+        name: acm-grc-ansible-example:latest
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: acm-grc-ansible-example
+  namespace: acm-grc-ansible-example
+  labels:
+    app: acm-grc-ansible-example
+spec:
+  ports:
+  - name: https
+    port: 443
+    protocol: TCP
+    targetPort: 8443
+  selector:
+    app: acm-grc-ansible-example
+
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: acm-grc-ansible-example
+  namespace: acm-grc-ansible-example
+  labels:
+    app: acm-grc-ansible-example
+spec:
+  port:
+    targetPort: https
+  tls:
+    insecureEdgeTerminationPolicy: Redirect
+    termination: passthrough
+  to:
+    kind: Service
+    name: acm-grc-ansible-example
