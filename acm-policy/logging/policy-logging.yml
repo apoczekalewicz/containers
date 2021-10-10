@@ -159,20 +159,20 @@ spec:
                   application:
                     maxAge: 1d
                   infra:
-                    maxAge: 7d
+                    maxAge: 1d
                   audit:
-                    maxAge: 7d
+                    maxAge: 1d
                 elasticsearch:
                   nodeCount: 3
                   resources:
                     limits:
-                       memory: 16Gi
+                       memory: 4Gi
                     requests:
                       cpu: 500m
-                      memory: 16Gi
+                      memory: 2Gi
                   storage:
-                    storageClassName: gp2
-                    size: 200G
+                    storageClassName: ovirt-csi-sc
+                    size: 20G
                   redundancyPolicy: SingleRedundancy
               visualization:
                 type: kibana
