@@ -8,7 +8,7 @@ metadata:
     policy.open-cluster-management.io/controls: AC-3 Access Enforcement
   namespace: open-cluster-management-policies
 spec:
-  remediationAction: inform
+  remediationAction: enforce
   disabled: false
   policy-templates:
     - objectDefinition:
@@ -42,6 +42,7 @@ apiVersion: policy.open-cluster-management.io/v1
 kind: PlacementBinding
 metadata:
   name: binding-policy-clusteradmin
+  namespace: open-cluster-management-policies
 placementRef:
   name: placement-policy-clusteradmin
   kind: PlacementRule
@@ -55,6 +56,7 @@ apiVersion: apps.open-cluster-management.io/v1
 kind: PlacementRule
 metadata:
   name: placement-policy-clusteradmin
+  namespace: open-cluster-management-policies
 spec:
   clusterConditions:
   - status: "True"
