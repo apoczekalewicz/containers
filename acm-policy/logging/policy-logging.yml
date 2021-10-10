@@ -72,12 +72,12 @@ spec:
               name: elasticsearch-operator
               namespace: openshift-operators-redhat
             spec:
-              channel: "4.6"  ## Need to update for other OCP version
+              channel: "stable-5.2"  ## Need to update for other OCP version
               installPlanApproval: Automatic
               name: elasticsearch-operator
               source: redhat-operators
               sourceNamespace: openshift-marketplace
-              startingCSV: elasticsearch-operator.4.6.0-202103010126.p0  ## Need to update for other OCP version
+              startingCSV: elasticsearch-operator.5.2.2-21  ## Need to update for other OCP version
   - objectDefinition:
       apiVersion: policy.open-cluster-management.io/v1
       kind: ConfigurationPolicy
