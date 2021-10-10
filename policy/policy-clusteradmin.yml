@@ -1,7 +1,7 @@
 apiVersion: policy.open-cluster-management.io/v1
 kind: Policy
 metadata:
-  name: policy-rolebinding
+  name: policy-clusteradmin
   namespace: open-cluster-management-policies
   annotations:
     policy.open-cluster-management.io/standards: NIST-CSF
@@ -40,7 +40,7 @@ placementRef:
   kind: PlacementRule
   apiGroup: apps.open-cluster-management.io
 subjects:
-- name: policy-rolebinding
+- name: policy-clusteradmin
   kind: Policy
   apiGroup: policy.open-cluster-management.io
 ---
