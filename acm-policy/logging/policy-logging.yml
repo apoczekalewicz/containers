@@ -166,10 +166,10 @@ spec:
                   nodeCount: 3
                   resources:
                     limits:
-                       memory: 4Gi
+                       memory: 2Gi
                     requests:
-                      cpu: 500m
-                      memory: 2Gi
+                      cpu: 100m
+                      memory: 1Gi
                   storage:
                     storageClassName: ovirt-csi-sc
                     size: 20G
