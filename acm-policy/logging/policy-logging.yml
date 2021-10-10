@@ -204,29 +204,6 @@ spec:
                       requests:
                         cpu: 100m
                         memory: 736Mi
-  - objectDefinition:
-      apiVersion: policy.open-cluster-management.io/v1
-      kind: ConfigurationPolicy
-      metadata:
-        name: policy-cluster-log-forwarders
-      spec:
-        remediationAction: enforce # the policy-template spec.remediationAction is overridden by the preceding parameter value for spec.remediationAction.
-        severity: high
-        object-templates:
-        - complianceType: musthave
-          objectDefinition:
-            apiVersion: logging.openshift.io/v1
-            kind: ClusterLogForwarder
-            metadata:
-              name: instance
-              namespace: openshift-logging
-            spec:
-              pipelines:
-                - name: enable-default-log-store
-                  inputRefs:
-                    - audit
-                  outputRefs:
-                    - default
 ---
 apiVersion: policy.open-cluster-management.io/v1
 kind: PlacementBinding
