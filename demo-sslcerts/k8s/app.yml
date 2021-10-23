@@ -2,10 +2,9 @@
 apiVersion: image.openshift.io/v1
 kind: ImageStream
 metadata:
-  name: acm-grc-ansible-example
-  namespace: acm-grc-ansible-example
+  name: demossl
   labels:
-    app: acm-grc-ansible-example
+    app: demossl
 spec:
   tags:
   - name: latest
@@ -19,21 +18,20 @@ spec:
 apiVersion: apps.openshift.io/v1
 kind: DeploymentConfig
 metadata:
-  name: acm-grc-ansible-example
-  namespace: acm-grc-ansible-example
+  name: demossl
   labels:
-    app: acm-grc-ansible-example
+    app: demossl
 spec:
   replicas: 1
   selector:
-    app: acm-grc-ansible-example
+    app: demossl
   template:
     metadata:
       labels:
-        app: acm-grc-ansible-example
+        app: demossl
     spec:
       containers:
-      - name: acm-grc-ansible-example
+      - name: demossl
         ports:
         - containerPort: 8080
         - containerPort: 8443
@@ -56,19 +54,18 @@ spec:
     imageChangeParams:
       automatic: true
       containerNames:
-        - acm-grc-ansible-example
+        - demossl
       from:
         kind: ImageStreamTag
-        name: acm-grc-ansible-example:latest
+        name: demossl:latest
 
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: acm-grc-ansible-example
-  namespace: acm-grc-ansible-example
+  name: demossl
   labels:
-    app: acm-grc-ansible-example
+    app: demossl
 spec:
   ports:
   - name: https
@@ -76,16 +73,15 @@ spec:
     protocol: TCP
     targetPort: 8443
   selector:
-    app: acm-grc-ansible-example
+    app: demossl
 
 ---
 apiVersion: route.openshift.io/v1
 kind: Route
 metadata:
-  name: acm-grc-ansible-example
-  namespace: acm-grc-ansible-example
+  name: demossl
   labels:
-    app: acm-grc-ansible-example
+    app: demossl
 spec:
   port:
     targetPort: https
@@ -94,4 +90,4 @@ spec:
     termination: passthrough
   to:
     kind: Service
-    name: acm-grc-ansible-example
+    name: demossl
