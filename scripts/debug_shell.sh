@@ -1,6 +1,5 @@
 #!/bin/bash
 
-USER=core
 IFS=$'\n'
 COUNTER=0
 for i in $(oc get nodes -o wide | awk '{ print $1 " " $6 }' | grep -v INTERNAL)
