@@ -8,7 +8,7 @@ spec:
     image: ubi8
     command: [ "/bin/bash", "-c", "sleep infinity" ]
     volumeMounts:
-    - mountPath: /katalog
+    - mountPath: /dir
       name: test
   volumes:
   - name: test
