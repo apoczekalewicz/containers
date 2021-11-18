@@ -2,5 +2,7 @@ Order:
 pvc1 - pvc on cephfs sc
 container - container using pvc1
 snapshot - create snapshot
-snapshot-restore - create a pvc-restore 
-container-restore - container using pvc-restore
+snapshot-restore - create a pvc1-restore 
+container-restore - container using pvc1-restore
+clone - create a pvc1-clone
+container-clone - container using pvc1-clone

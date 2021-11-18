@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: container-clone
+spec:
+  containers:
+  - name: ubi8
+    image: ubi8
+    command: [ "/bin/bash", "-c", "sleep infinity" ]
+    volumeMounts:
+    - mountPath: /dir
+      name: test
+  volumes:
+  - name: test
+    persistentVolumeClaim:
+      claimName: pvc1-clone
