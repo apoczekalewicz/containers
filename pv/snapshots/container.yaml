@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: ubi8
+  name: container
 spec:
   containers:
   - name: ubi8
