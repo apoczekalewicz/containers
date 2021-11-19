@@ -1,25 +1,30 @@
-apiVersion: konveyor.openshift.io/v1alpha1
+apiVersion: oadp.openshift.io/v1alpha1
 kind: Velero
 metadata:
-  name: example-velero
+  name: velero1
   namespace: openshift-adp
 spec:
   olm_managed: true
-  backup_storage_locations:
+  enable_csi_plugin: true
+  #  noobaa: true
+  backupStorageLocations:
     - config:
-        region: "us-east-2"
+        profile: default
+        region: noobaa
         s3ForcePathStyle: "true"
         insecureSkipTLSVerify: "true"
-        s3Url: https://noobaa-mgmt-openshift-storage.apps.ocp1.example.lab
+        s3Url: https://s3-openshift-storage.apps.ocp1.example.lab
       credentials_secret_ref:
         name: cloud-credentials
+        key: cloud
         namespace: openshift-adp
       name: default
-      object_storage:
+      objectStorage:
         bucket: oadp
         prefix: velero
       provider: aws
-  default_velero_plugins:
+      default: true
+  defaultVeleroPlugins:
     - aws
     - csi
     - openshift
