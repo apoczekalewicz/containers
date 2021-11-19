@@ -1,0 +1,10 @@
+apiVersion: velero.io/v1
+kind: Restore
+metadata:
+  namespace: openshift-adp
+  name: restore1
+spec:
+  backupName: backup1
+  restorePVs: true
+  includedNamespaces:
+    - projektdb

@@ -10,7 +10,7 @@ spec:
         region: "us-east-2"
         s3ForcePathStyle: "true"
         insecureSkipTLSVerify: "true"
-        s3Url: http://$NOOBAA_ENDPOINT
+        s3Url: https://noobaa-mgmt-openshift-storage.apps.ocp1.example.lab
       credentials_secret_ref:
         name: cloud-credentials
         namespace: openshift-adp
@@ -28,6 +28,6 @@ spec:
   volume_snapshot_locations:
     - config:
         profile: default
-        region: us-east-2
+        region: "us-east-2"
       name: default
       provider: aws

@@ -1,0 +1,9 @@
+apiVersion: velero.io/v1
+kind: Backup
+metadata:
+  namespace: openshift-adp
+  name: backup1
+spec:
+  defaultVolumesToRestic: true
+  includedNamespaces:
+    - projektdb
