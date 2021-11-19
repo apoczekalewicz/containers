@@ -1,0 +1,33 @@
+apiVersion: konveyor.openshift.io/v1alpha1
+kind: Velero
+metadata:
+  name: example-velero
+  namespace: openshift-adp
+spec:
+  olm_managed: true
+  backup_storage_locations:
+    - config:
+        region: "us-east-2"
+        s3ForcePathStyle: "true"
+        insecureSkipTLSVerify: "true"
+        s3Url: http://$NOOBAA_ENDPOINT
+      credentials_secret_ref:
+        name: cloud-credentials
+        namespace: openshift-adp
+      name: default
+      object_storage:
+        bucket: oadp
+        prefix: velero
+      provider: aws
+  default_velero_plugins:
+    - aws
+    - csi
+    - openshift
+  velero_feature_flags: EnableCSI
+  enable_restic: true
+  volume_snapshot_locations:
+    - config:
+        profile: default
+        region: us-east-2
+      name: default
+      provider: aws
