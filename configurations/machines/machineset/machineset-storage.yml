@@ -1,0 +1,44 @@
+apiVersion: machine.openshift.io/v1beta1
+kind: MachineSet
+metadata:
+  labels:
+    machine.openshift.io/cluster-api-cluster: ocp1-qfwgn
+    machine.openshift.io/cluster-api-machine-role: storageworker
+    machine.openshift.io/cluster-api-machine-type: storageworker
+  name: ocp1-qfwgn-storageworker
+  namespace: openshift-machine-api
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      machine.openshift.io/cluster-api-cluster: ocp1-qfwgn
+      machine.openshift.io/cluster-api-machineset: ocp1-qfwgn-storageworker
+  template:
+    metadata:
+      labels:
+        machine.openshift.io/cluster-api-cluster: ocp1-qfwgn
+        machine.openshift.io/cluster-api-machine-role: storageworker
+        machine.openshift.io/cluster-api-machine-type: storageworker
+        machine.openshift.io/cluster-api-machineset: ocp1-qfwgn-storageworker
+    spec:
+      metadata:
+        node-role.kubernetes.io/worker: ""
+      providerSpec:
+        value:
+          cluster_id: e41b5cae-4b53-11eb-8555-00163e4b6a11
+          userDataSecret:
+            name: worker-user-data
+          cpu:
+            cores: 24
+            sockets: 1
+            threads: 1
+          name: ''
+          credentialsSecret:
+            name: ovirt-credentials
+          template_name: ocp1-qfwgn-rhcos
+          memory_mb: 65536
+          kind: OvirtMachineProviderSpec
+          os_disk:
+            size_gb: 150
+          type: server
+          apiVersion: ovirtproviderconfig.machine.openshift.io/v1beta1

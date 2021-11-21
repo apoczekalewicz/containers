@@ -1,0 +1,20 @@
+apiVersion: machine.openshift.io/v1beta1
+kind: MachineHealthCheck
+metadata:
+  name: health-workers
+  namespace: openshift-machine-api
+spec:
+  selector:
+    matchLabels:
+      machine.openshift.io/cluster-api-machine-role: worker
+      machine.openshift.io/cluster-api-machine-type: worker 
+      machine.openshift.io/cluster-api-machineset: ocp1-qfwgn-worker
+  unhealthyConditions:
+  - type:    "Ready"
+    timeout: "120s" 
+    status: "False"
+  - type:    "Ready"
+    timeout: "120s" 
+    status: "Unknown"
+  maxUnhealthy: "40%" 
+  nodeStartupTimeout: "7m" 

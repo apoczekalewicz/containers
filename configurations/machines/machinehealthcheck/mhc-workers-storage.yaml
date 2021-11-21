@@ -1,0 +1,21 @@
+apiVersion: machine.openshift.io/v1beta1
+kind: MachineHealthCheck
+metadata:
+  name: health-workers-storage
+  namespace: openshift-machine-api
+spec:
+  selector:
+    matchLabels:
+      machine.openshift.io/cluster-api-machine-role: storageworker
+      machine.openshift.io/cluster-api-machine-type: storageworker
+      machine.openshift.io/cluster-api-machineset: ocp1-qfwgn-storageworker
+  unhealthyConditions:
+  - type:    "Ready"
+    timeout: "300s" 
+    status: "False"
+  - type:    "Ready"
+    timeout: "300s" 
+    status: "Unknown"
+  maxUnhealthy: "40%" 
+  nodeStartupTimeout: "3m" 
+

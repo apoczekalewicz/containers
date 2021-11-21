@@ -1,0 +1,32 @@
+apiVersion: machineconfiguration.openshift.io/v1
+kind: MachineConfig
+metadata:
+  labels:
+    machineconfiguration.openshift.io/role: worker
+  name: worker-custom-route-configuration
+spec:
+  config:
+    ignition:
+      config: {}
+      security:
+        tls: {}
+      timeouts: {}
+      version: 3.1.0
+    networkd: {}
+    passwd: {}
+    storage: {}
+    systemd:
+      units:
+      - contents: |
+             [Unit]
+             Description=nmcli-dev-modify
+             After=network-online.target
+
+             [Service]
+             Type=oneshot
+             ExecStart=nmcli dev modify enp3s0 +ipv4.routes "172.17.16.0/20 192.168.60.10"
+             [Install]
+             WantedBy=multi-user.target
+        enabled: true
+        name: nmcli-dev-modify.service
+  osImageURL: ""

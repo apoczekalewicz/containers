@@ -1,0 +1,24 @@
+apiVersion: machine.openshift.io/v1beta1
+kind: MachineHealthCheck
+metadata:
+  name: health-workers
+  namespace: openshift-machine-api
+spec:
+  selector:
+    matchLabels:
+      machine.openshift.io/cluster-api-machine-role: worker
+      machine.openshift.io/cluster-api-machine-type: worker 
+      machine.openshift.io/cluster-api-machineset: ocp1-qfwgn-worker
+  unhealthyConditions:
+  - type:    "Ready"
+    timeout: "3s" 
+    status: "False"
+  - type:    "Ready"
+    timeout: "3s" 
+    status: "Unknown"
+  maxUnhealthy: "40%" 
+  nodeStartupTimeout: "3s"
+  remediationTemplate:
+    kind: PoisonPillRemediationTemplate
+    apiVersion: poison-pill.medik8s.io/v1alpha1
+    name: poison1

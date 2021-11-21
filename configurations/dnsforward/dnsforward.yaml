@@ -1,0 +1,13 @@
+apiVersion: operator.openshift.io/v1
+kind: DNS
+metadata:
+  name: default
+spec:
+  servers:
+  - name: vmware
+    zones: 
+      - spm.lab
+    forwardPlugin:
+      upstreams: 
+        - 172.17.16.2
+
