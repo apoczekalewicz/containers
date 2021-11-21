@@ -6,4 +6,4 @@ metadata:
 spec:
   defaultVolumesToRestic: true
   includedNamespaces:
-    - projektdb
+    - demo-virt

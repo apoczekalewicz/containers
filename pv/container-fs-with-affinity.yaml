@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: ubi8
+spec:
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+        - matchExpressions:
+          - key: kubernetes.io/hostname
+            operator: In
+            values:
+            - ocp1-qfwgn-worker-k6pfn
+            - ocp1-qfwgn-worker-fvvw7
+            - ocp1-qfwgn-worker-5k2ns
+  containers:
+  - name: ubi8
+    image: ubi8
+    command: [ "/bin/bash", "-c", "sleep infinity" ]
+    volumeMounts:
+    - mountPath: /katalog
+      name: test
+  volumes:
+  - name: test
+    persistentVolumeClaim:
+      claimName: pvc1
