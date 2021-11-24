@@ -1,0 +1,17 @@
+apiVersion: cdi.kubevirt.io/v1beta1
+kind: DataVolume
+metadata:
+  name: dv-test
+spec:
+  pvc:
+    accessModes:
+    - ReadWriteMany
+    resources:
+      requests:
+        storage: 10Gi
+    storageClassName: ovirt-csi-sc
+    volumeMode: Block
+  source:
+    pvc:
+      name: rhel8
+      namespace: openshift-virtualization-os-images
