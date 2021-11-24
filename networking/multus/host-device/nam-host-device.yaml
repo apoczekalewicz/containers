@@ -1,0 +1,13 @@
+apiVersion: "k8s.cni.cncf.io/v1"
+kind: NetworkAttachmentDefinition
+metadata:
+  name: host-device-conf
+spec:
+  config: '{
+      "cniVersion": "0.3.0",
+      "type": "host-device",
+      "device": "enp9s0",
+      "ipam": {
+        "type": "dhcp"
+       }
+    }'

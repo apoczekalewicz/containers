@@ -1,0 +1,10 @@
+Edit network.operator.openshift.io
+
+  additionalNetworks:
+  - name: host-device-conf
+    namespace: test2
+    rawCNIConfig: '{ "cniVersion": "0.3.0", "type": "host-device", "device": "enp9s0",
+      "ipam": { "type": "dhcp" } }'
+    type: raw
+
+

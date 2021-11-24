@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: container
+  annotations:
+    k8s.v1.cni.cncf.io/networks: host-device-conf
+spec:
+  containers:
+  - name: container
+    image: registry.redhat.io/openshift4/network-tools-rhel8
+    command: [ "/bin/bash", "-c", "sleep infinity" ]
+

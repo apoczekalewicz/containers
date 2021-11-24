@@ -1,0 +1,8 @@
+Edit network.operator.openshift.io
+
+spec:
+  additionalNetworks:
+  - name: macvlan-conf
+    namespace: test2
+    rawCNIConfig: '{ "name": "macvlan-conf", "cniVersion": "0.3.1", "type": "bridge",
+      "master": "enp9s0", "ipam": { "type": "dhcp" } }'
