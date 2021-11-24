@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: container
+  annotations:
+    k8s.v1.cni.cncf.io/networks: '[{ "name": "macvlan-conf", "ips": ["172.27.9.244/16"] }, { "name": "macvlan-conf", "ips": ["10.64.109.202/23"] }]'
+spec:
+  containers:
+  - name: container
+    image: registry.redhat.io/openshift4/network-tools-rhel8
+    command: [ "/bin/bash", "-c", "sleep infinity" ]
+
