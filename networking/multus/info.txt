@@ -1,3 +1,6 @@
+dhcpowe rzeczy dodawac przez edycje obiektu network.operator.openshift.io bo wtedy startuja pody w openshift-multus zwiazane z dhcp.
+Jak robimy recznie network-attachment-definition potrafia sie nie tworzyc ;)
+
 Edit network.operator.openshift.io
 
 spec:
@@ -6,3 +9,5 @@ spec:
     namespace: test2
     rawCNIConfig: '{ "name": "macvlan-conf", "cniVersion": "0.3.1", "type": "bridge",
       "master": "enp9s0", "ipam": { "type": "dhcp" } }'
+
+
