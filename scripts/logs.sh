@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # events
-oc get events --sort-by=".lastTimestamp" > events.txt
+oc get events --sort-by=".lastTimestamp" -w > events.txt &
 
 # logs
 for pod in $(oc get pods --no-headers | awk '{ print $1 }')
