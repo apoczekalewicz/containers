@@ -1,0 +1,15 @@
+---
+- name: Main
+  hosts: localhost
+  tasks:
+  - name: Load Plan
+    include_vars:
+      file: "/tmp/hook/plan.yml"
+      name: plan
+  - name: Load Workload
+    include_vars:
+      file: "/tmp/hook/workload.yml"
+      name: workload
+  - name: Pause for 600 minutes
+    pause:
+      minutes: 600

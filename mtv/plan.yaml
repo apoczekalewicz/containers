@@ -1,0 +1,81 @@
+apiVersion: v1
+kind: List
+items:
+- apiVersion: forklift.konveyor.io/v1beta1
+  kind: Plan
+  metadata:
+    name: nextplan
+    namespace: openshift-mtv
+  spec:
+    description: ""
+    map:
+      network:
+        name: nextplan-qbjxn
+        namespace: openshift-mtv
+      storage:
+        name: nextplan-fj7ks
+        namespace: openshift-mtv
+    provider:
+      destination:
+        name: host
+        namespace: openshift-mtv
+      source:
+        name: vmware
+        namespace: openshift-mtv
+    targetNamespace: demo-virt
+    vms:
+    - hooks:
+      - hook:
+          name: nextplan-hook-dsk5x
+          namespace: openshift-mtv
+        step: PreHook
+      id: vm-746
+    warm: false
+- apiVersion: forklift.konveyor.io/v1beta1
+  kind: NetworkMap
+  metadata:
+    annotations:
+      forklift.konveyor.io/shared: "false"
+    name: nextplan-qbjxn
+    namespace: openshift-mtv
+  spec:
+    map:
+    - destination:
+        type: pod
+      source:
+        id: dvportgroup-26
+    provider:
+      destination:
+        name: host
+        namespace: openshift-mtv
+      source:
+        name: vmware
+        namespace: openshift-mtv
+- apiVersion: forklift.konveyor.io/v1beta1
+  kind: StorageMap
+  metadata:
+    annotations:
+      forklift.konveyor.io/shared: "false"
+    name: nextplan-fj7ks
+    namespace: openshift-mtv
+  spec:
+    map:
+    - destination:
+        storageClass: ocs-storagecluster-ceph-rbd
+      source:
+        id: datastore-13
+    provider:
+      destination:
+        name: host
+        namespace: openshift-mtv
+      source:
+        name: vmware
+        namespace: openshift-mtv
+- apiVersion: forklift.konveyor.io/v1beta1
+  kind: Hook
+  metadata:
+    name: nextplan-hook-dsk5x
+    namespace: openshift-mtv
+  spec:
+    image: quay.io/apoczeka/hook-runner:latest
+    playbook: <base64>

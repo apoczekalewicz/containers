@@ -1,0 +1,64 @@
+---
+- name: test
+  hosts: localhost
+  vars:
+    - vcenter_hostname: "vc.spm.lab"
+    - vcenter_username: "administrator@vsphere.local"
+    - vcenter_password: "XXX"
+  tasks:
+
+  - name: Load Plan
+    include_vars:
+      file: "/tmp/hook/plan.yml"
+      name: plan
+  - name: Load Workload
+    include_vars:
+      file: "/tmp/hook/workload.yml"
+      name: workload
+
+  - name: Provide information about vCenter
+    vmware_about_info:
+      hostname: '{{ vcenter_hostname }}'
+      username: '{{ vcenter_username }}'
+      password: '{{ vcenter_password }}'
+      validate_certs: false
+    register: vcenter_about_info
+
+  - name: Info about vCenter
+    debug:
+      var: vcenter_about_info
+
+  - name: Show VM uuid and name
+    debug:
+      msg: VM uuid is {{ workload.vm.uuid }} and name is {{ workload.vm.resource.name }}
+
+  - name: Gather all registered virtual machines
+    vmware_guest_info:
+      hostname: '{{ vcenter_hostname }}'
+      username: '{{ vcenter_username }}'
+      password: '{{ vcenter_password }}'
+      validate_certs: false
+      uuid: '{{ workload.vm.uuid }}'
+      datacenter: '{{ workload.host.cluster.datacenter }}'
+    register: guestinfo
+
+  - debug:
+      var: guestinfo
+
+  - name: Create new name
+    set_fact:
+      newname: '{{ workload.vm.resource.name|lower|replace(".","-") }}'
+
+  - name: Show new name
+    debug:
+      msg: New name for {{ workload.vm.resource.name }} is {{ newname }}
+
+  - name: Rename {{ workload.vm.resource.name }} to {{ newname }}
+    vmware_guest:
+      hostname: "{{ vcenter_hostname }}"
+      username: "{{ vcenter_username }}"
+      password: "{{ vcenter_password }}"
+      validate_certs: no
+      uuid: "{{ workload.vm.uuid }}"
+      name: "{{ newname }}"
+
