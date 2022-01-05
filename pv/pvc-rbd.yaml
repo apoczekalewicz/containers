@@ -6,6 +6,7 @@ spec:
   storageClassName: ocs-storagecluster-ceph-rbd
   accessModes:
     - ReadWriteOnce
+  volumeMode: Block
   resources:
     requests:
       storage: 1Gi

@@ -20,7 +20,7 @@ spec:
         namespace: openshift-adp
       name: default
       objectStorage:
-        bucket: oadp
+        bucket: bucket1-e96e6c3f-7bc7-4d27-9855-c2e089cc067b
         prefix: velero
       provider: aws
       default: true
