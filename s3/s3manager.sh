@@ -1,0 +1,1 @@
+oc new-app mastertinner/s3manager -e ENDPOINT=s3-openshift-storage.apps.ocp1.example.lab -e ACCESS_KEY_ID=2LRxPKcxag5xVTDgLe2g -e SECRET_ACCESS_KEY="+D5P/Lwzq+IblBfWhAwhXBlMP7pLPInXkUL0Kmwy" -e SKIP_SSL_VERIFICATION=true
