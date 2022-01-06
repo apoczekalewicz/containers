@@ -1,0 +1,11 @@
+# volumesnapshotclass must have label: velero.io/csi-volumesnapshot-class: "true"
+apiVersion: velero.io/v1
+kind: Backup
+metadata:
+  namespace: openshift-adp
+  name: backup1
+spec:
+  defaultVolumesToRestic: false
+  snapshotVolumes: true
+  includedNamespaces:
+    - projektdb
