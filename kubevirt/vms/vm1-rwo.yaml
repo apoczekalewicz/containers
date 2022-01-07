@@ -1,0 +1,62 @@
+apiVersion: kubevirt.io/v1
+kind: VirtualMachine
+metadata:
+  name: vm1
+  labels:
+    app: vm1
+spec:
+  dataVolumeTemplates:
+    - metadata:
+        name: cirros-dv
+      spec:
+        pvc:
+          accessModes:
+            - ReadWriteOnce
+          resources:
+            requests:
+              storage: 200Mi
+          storageClassName: ocs-storagecluster-ceph-rbd
+          volumeMode: Block
+        source:
+          registry:
+            url: 'docker://docker.io/kubevirt/cirros-registry-disk-demo:latest'
+  running: true
+  template:
+    metadata:
+      annotations:
+        vm.kubevirt.io/workload: server
+      labels:
+        kubevirt.io/domain: vm1
+        vm.kubevirt.io/name: vm1
+    spec:
+      domain:
+        cpu:
+          cores: 1
+          sockets: 1
+          threads: 1
+        devices:
+          disks:
+            - disk:
+                bus: virtio
+              name: disk-0
+          interfaces:
+            - masquerade: {}
+              model: virtio
+              name: default
+          networkInterfaceMultiqueue: true
+          rng: {}
+        machine:
+          type: pc-q35-rhel8.4.0
+        resources:
+          requests:
+            memory: 2Gi
+      evictionStrategy: LiveMigrate
+      hostname: vm1
+      networks:
+        - name: default
+          pod: {}
+      terminationGracePeriodSeconds: 180
+      volumes:
+        - dataVolume:
+            name: cirros-dv
+          name: disk-0
