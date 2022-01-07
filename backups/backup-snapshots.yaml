@@ -8,4 +8,4 @@ spec:
   defaultVolumesToRestic: false
   snapshotVolumes: true
   includedNamespaces:
-    - projektdb
+    - project-backup

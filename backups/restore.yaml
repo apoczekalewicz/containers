@@ -7,4 +7,4 @@ spec:
   backupName: backup1
   restorePVs: true
   includedNamespaces:
-    - projektdb
+    - project-backup
