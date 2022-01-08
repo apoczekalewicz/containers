@@ -24,9 +24,9 @@ spec:
         prefix: velero
       provider: aws
       default: true
-      #  customVeleroPlugins:
-      #    - image: quay.io/kubevirt/kubevirt-velero-plugin:v0.2.0
-      #      name: kvp
+  customVeleroPlugins:
+    - image: quay.io/kubevirt/kubevirt-velero-plugin:v0.2.0
+      name: kvp
   defaultVeleroPlugins:
     - aws
     - csi
