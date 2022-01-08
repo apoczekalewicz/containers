@@ -1,3 +1,3 @@
 #!/bin/bash
 oc delete -f ./nginx.yaml
-./sa.sh destroy
+./sa.sh remove
