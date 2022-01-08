@@ -44,9 +44,12 @@ spec:
         app: nginx
       annotations:
         pre.hook.backup.velero.io/container: fsfreeze
-        pre.hook.backup.velero.io/command: '["/sbin/fsfreeze", "--freeze", "/var/log/nginx"]'
+        #pre.hook.backup.velero.io/command: '["/sbin/fsfreeze", "--freeze", "/var/log/nginx"]'
+        pre.hook.backup.velero.io/command: '["/bin/sh", "-c", "date > /tmp/date.txt"]'
         post.hook.backup.velero.io/container: fsfreeze
-        post.hook.backup.velero.io/command: '["/sbin/fsfreeze", "--unfreeze", "/var/log/nginx"]'
+        #post.hook.backup.velero.io/command: '["/sbin/fsfreeze", "--unfreeze", "/var/log/nginx"]'
+        post.hook.backup.velero.io/command: '["/bin/sh", "-c", "date >> /tmp/date.txt"]'
+
     spec:
       volumes:
         - name: nginx-logs
