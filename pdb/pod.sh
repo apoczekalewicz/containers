@@ -1,0 +1,1 @@
+oc run --restart=Never --labels app=dontevict --overrides='{ "spec": { "nodeSelector": { "kubernetes.io/hostname": "ip-10-0-166-111"} } }' --image=quay.io/prometheus/busybox dont-evict-this-pod -- sleep 3h
