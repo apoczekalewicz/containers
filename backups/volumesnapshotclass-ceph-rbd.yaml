@@ -3,13 +3,9 @@ deletionPolicy: Retain
 driver: openshift-storage.rbd.csi.ceph.com
 kind: VolumeSnapshotClass
 metadata:
-  creationTimestamp: "2021-10-22T17:12:24Z"
-  generation: 1
   labels:
     velero.io/csi-volumesnapshot-class: "true"
   name: ocs-storagecluster-rbdplugin-snapclass-velero
-  resourceVersion: "281262819"
-  uid: 5abdf9e7-7b40-45e0-97f8-4b54ed1c8ad6
 parameters:
   clusterID: openshift-storage
   csi.storage.k8s.io/snapshotter-secret-name: rook-csi-rbd-provisioner

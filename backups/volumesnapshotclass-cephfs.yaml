@@ -1,0 +1,12 @@
+apiVersion: snapshot.storage.k8s.io/v1
+deletionPolicy: Retain
+driver: openshift-storage.cephfs.csi.ceph.com
+kind: VolumeSnapshotClass
+metadata:
+  labels:
+    velero.io/csi-volumesnapshot-class: "true"
+  name: ocs-storagecluster-cephfsplugin-snapclass-velero
+parameters:
+  clusterID: openshift-storage
+  csi.storage.k8s.io/snapshotter-secret-name: rook-csi-cephfs-provisioner
+  csi.storage.k8s.io/snapshotter-secret-namespace: openshift-storage
