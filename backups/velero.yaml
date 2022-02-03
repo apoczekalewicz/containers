@@ -14,6 +14,7 @@ spec:
         s3ForcePathStyle: "true"
         insecureSkipTLSVerify: "true"
         s3Url: https://s3-openshift-storage.apps.ocp1.example.lab
+        #s3Url: http://192.168.60.129:30229
       credentials_secret_ref:
         name: cloud-credentials
         key: cloud
