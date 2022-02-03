@@ -13,6 +13,7 @@ for CRD in $(oc get crd  | grep $FILTER | awk '{ print $1 }')
 do
 		if [[ "$ACTION" = "delete" ]]
 		then
+			oc delete $CRD --all -A
 			oc delete crd $CRD
 		else
 			echo -e "CRD: $CRD"
