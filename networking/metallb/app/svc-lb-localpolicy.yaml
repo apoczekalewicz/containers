@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: svc-lb-localpolicy
+  annotations:
+    metallb.universe.tf/address-pool: example1
+spec:
+  externalTrafficPolicy: Local
+  selector:
+    deployment: example-source
+  ports:
+    - port: 8080
+      targetPort: 8080
+      protocol: TCP
+  type: LoadBalancer

@@ -26,4 +26,10 @@ spec:
           protocol: TCP
         - containerPort: 8080
           protocol: TCP
-
+        volumeMounts:
+        - name: index
+          mountPath: /var/www/html
+      volumes:
+      - name: index
+        configMap:
+          name: index-html-configmap
