@@ -1,0 +1,118 @@
+# Dostep do oryginalnego indexu:
+podman run -p50051:50051     -it registry.redhat.io/redhat/redhat-operator-index:v4.9
+
+# Przeglad dostepnych operatorow:
+grpcurl -plaintext localhost:50051 api.Registry/ListPackages > packages.out
+
+# Stworzenie indexu z filtracja - w tym wypadku jeden operator container-security-operator:
+opm index prune -f registry.redhat.io/redhat/redhat-operator-index:v4.9     -p container-security-operator  -t work.ap.vlab:8443/operators/redhat-operator-index:v4.9
+podman push work.ap.vlab:8443/operators/redhat-operator-index:v4.9
+
+# Zgranie image'ow do lokalnego katalogu:
+oc adm catalog mirror work.ap.vlab:8443/operators/redhat-operator-index:v4.9 file:///local/index -a ../../base/pull-secret.txt --insecure --index-filter-by-os=x86_64
+
+# Zgranie z lokalnego katalogu do priv repo:
+oc adm catalog mirror file://local/index/operators/redhat-operator-index:v4.9  work.ap.vlab:8443/operators -a ~/disconnected/base/pull-secret.txt  --insecure --index-filter-by-os=x86_64
+
+# Stworzone pliki do uzycia w klastrze:
+ls manifests-index/operators/redhat-operator-index-1647298834/
+
+catalogSource.yaml  imageContentSourcePolicy.yaml  mapping.txt
+
+1)
+cat catalogSource.yaml 
+apiVersion: operators.coreos.com/v1alpha1
+kind: CatalogSource
+metadata:
+  name: index/operators/redhat-operator-index
+  namespace: openshift-marketplace
+spec:
+  image: work.ap.vlab:8443/operators/local-index-operators-redhat-operator-index:v4.9
+  sourceType: grpc
+
+
+2)
+cat imageContentSourcePolicy.yaml 
+---
+apiVersion: operator.openshift.io/v1alpha1
+kind: ImageContentSourcePolicy
+metadata:
+  labels:
+    operators.openshift.org/catalog: "true"
+  name: index-operators-redhat-operator-index-0
+spec:
+  repositoryDigestMirrors:
+  - mirrors:
+    - work.ap.vlab:8443/operators/quay-quay-container-security-operator-bundle
+    source: local/index/operators/redhat-operator-index/quay/quay-container-security-operator-bundle
+  - mirrors:
+    - work.ap.vlab:8443/operators/quay-quay-container-security-operator-rhel8
+    source: local/index/operators/redhat-operator-index/quay/quay-container-security-operator-rhel8
+  - mirrors:
+    - work.ap.vlab:8443/operators/quay-quay-container-security-rhel8-operator-metadata
+    source: local/index/operators/redhat-operator-index/quay/quay-container-security-rhel8-operator-metadata
+  - mirrors:
+    - work.ap.vlab:8443/operators/quay-quay-container-security-rhel8-operator
+    source: local/index/operators/redhat-operator-index/quay/quay-container-security-rhel8-operator
+
+
+3)
+[ap@work redhat-operator-index-1647298834]$ cat mapping.txt 
+file://local/index/operators/redhat-operator-index/quay/quay-container-security-operator-bundle@sha256:bbb7a3a4cfd9c98df1037c58d3e68e1cd8e554c0af336b08a04a914285c68edb=work.ap.vlab:8443/operators/quay-quay-container-security-operator-bundle:a4e55180
+file://local/index/operators/redhat-operator-index/quay/quay-container-security-rhel8-operator@sha256:70b79676954e43d291e2bd38fabba1db0ca52805457fb8e72d03c230daadb19d=work.ap.vlab:8443/operators/quay-quay-container-security-rhel8-operator:c1c5fde5
+...
+
+
+mapping.txt moze byc uzyty do mirrorowania obrazow np:
+
+oc image mirror -a ~/disconnected/base/pull-secret.txt --filter-by-os='.*' -f ./mapping.txt 
+
+
+------
+
+Zeby zdobyc mapping.txt mozna uzyc komendy z --manifest-only (nie bedzie pobierac contentu):
+oc adm catalog mirror work.ap.vlab:8443/operators/redhat-operator-index:v4.9 file:///local/index -a ../../base/pull-secret.txt --insecure --index-filter-by-os=x86_64 --manifests-only
+
+jak sie wykonuje komende oc adm catalog mirror tworzy sie w /tmp baza sqlite ktora mozna odpytac np jesli chcemy zobaczyc jakie image sa powiazane z danym bundlem:
+echo "select * from related_image where operatorbundle_name like 'container-security%';" | sqlite3  -line /tmp/063123907/index.db 
+
+-------------
+
+Aktualizacja indexu o nowe rzeczy:
+- robi sie to dodajac do indexu nowe bundle.
+
+Skad wiedziec jak nazywaja sie bundle:
+
+https://access.redhat.com/solutions/6452951
+$ podman run -it --entrypoint /bin/bash registry.redhat.io/redhat/redhat-operator-index:v4.8
+# cd /tmp
+# opm registry serve -d /database/index.db &
+# curl -LO https://github.com/fullstorydev/grpcurl/releases/download/v1.8.5/grpcurl_1.8.5_linux_x86_64.tar.gz
+# tar xf grpcurl_1.8.5_linux_x86_64.tar.gz grpcurl
+# ./grpcurl -plaintext localhost:50051 api.Registry.ListBundles > bundles.txt
+# grep cluster-logging bundles.txt | egrep '"bundlePath|value"'
+  "bundlePath": "registry.redhat.io/openshift-logging/cluster-logging-operator-bundle@sha256:43d074c01dc01db4fd05fc83239e159731dada8f0c750f34a36a501069f2abb2",
+      "value": "{\"packageName\":\"cluster-logging\",\"version\":\"5.0.8-7\"}"
+  "bundlePath": "registry.redhat.io/openshift-logging/cluster-logging-operator-bundle@sha256:f21bb9310b2500745317879ac1f214e952c11e77c2a438878ae11812d717d07e",
+      "value": "{\"packageName\":\"cluster-logging\",\"version\":\"5.2.2-21\"}"
+  "bundlePath": "registry.redhat.io/openshift-logging/cluster-logging-operator-bundle@sha256:f21bb9310b2500745317879ac1f214e952c11e77c2a438878ae11812d717d07e",
+      "value": "{\"packageName\":\"cluster-logging\",\"version\":\"5.2.2-21\"}"
+  "bundlePath": "registry.redhat.io/openshift-logging/cluster-logging-operator-bundle@sha256:837400416acca8d1c074a7d5aebc36f850e52eb91bb7fdc5450de5466be8f66a",
+      "value": "{\"packageName\":\"cluster-logging\",\"version\":\"5.1.2-7\"}"
+  "bundlePath": "registry.redhat.io/openshift4/ose-cluster-logging-operator-bundle@sha256:75571d3421164caf364fa1fd13f94d37832cde4bb53f0a4f6b480c811484aee9",
+      "value": "{\"packageName\":\"cluster-logging\",\"version\":\"4.6.0-202103010126.p0\"}"
+
+i potem mozna:
+opm index add --bundles registry.redhat.io/web-terminal-tech-preview/web-terminal-rhel8-operator-metadata@sha256:c38159425ea2aa0e44c00b61c3055e646a72544ce2b3c08ffdb11438cd3748d7  --from-index work.ap.vlab:8443/operators/redhat-operator-index:v4.9 --tag work.ap.vlab:8443/operators/redhat-operator-index:v4.9.1 --pull-tool podman   [--mode semver]
+
+czyli wygenerowalismy nowy index (4.9.1 zamiast 4.9)
+potem podman push
+potem oc adm catalog mirror work.ap.vlab:8443/operators/redhat-operator-index:v4.9.1 file:///local/index -a ../../base/pull-secret.txt --insecure --index-filter-by-os=x86_64
+potem oc adm catalog mirror file://local/index/operators/redhat-operator-index:v4.9  work.ap.vlab:8443/operators -a ~/disconnected/base/pull-secret.txt  --insecure --index-filter-by-os=x86_64
+i aktualizacja imagecontentsourcepolicy
+
+catalogsource raczej nie trzeba zmienic on co jakis czas sprawdza
+
+weryfikacja czy nowe pakiety sa widoczne:
+$ oc get packagemanifests -n openshift-marketplace
+
