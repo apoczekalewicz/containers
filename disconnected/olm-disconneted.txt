@@ -56,6 +56,12 @@ spec:
     source: local/index/operators/redhat-operator-index/quay/quay-container-security-rhel8-operator
 
 
+UWAGA!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+w source to nie sa prawdziwe linki do przemapowania (to dlatego ze kopiowanie bylo z filesystemu) dlatego nalezy wykonac komende z opcja --manifests-only (bez pobierania)
+oc adm catalog mirror work.ap.vlab:8443/operators/redhat-operator-index:v4.9.2 work.ap.vlab:8443/operators -a pull-secret.txt --insecure --index-filter-by-os=x86_64 --manifests-only
+
+
+
 3)
 [ap@work redhat-operator-index-1647298834]$ cat mapping.txt 
 file://local/index/operators/redhat-operator-index/quay/quay-container-security-operator-bundle@sha256:bbb7a3a4cfd9c98df1037c58d3e68e1cd8e554c0af336b08a04a914285c68edb=work.ap.vlab:8443/operators/quay-quay-container-security-operator-bundle:a4e55180
@@ -110,6 +116,13 @@ potem podman push
 potem oc adm catalog mirror work.ap.vlab:8443/operators/redhat-operator-index:v4.9.1 file:///local/index -a ../../base/pull-secret.txt --insecure --index-filter-by-os=x86_64
 potem oc adm catalog mirror file://local/index/operators/redhat-operator-index:v4.9.1  work.ap.vlab:8443/operators -a ~/disconnected/base/pull-secret.txt  --insecure --index-filter-by-os=x86_64
 i aktualizacja imagecontentsourcepolicy i catsrc
+
+UWAGA!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+w source to nie sa prawdziwe linki do przemapowania (to dlatego ze kopiowanie bylo z filesystemu) dlatego nalezy wykonac komende z opcja --manifests-only (bez pobierania)
+oc adm catalog mirror work.ap.vlab:8443/operators/redhat-operator-index:v4.9.2 work.ap.vlab:8443/operators -a pull-secret.txt --insecure --index-filter-by-os=x86_64 --manifests-only
+
+
+
 
 weryfikacja czy nowe pakiety sa widoczne:
 $ oc get packagemanifests -n openshift-marketplace
