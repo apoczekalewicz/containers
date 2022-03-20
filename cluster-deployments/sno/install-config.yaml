@@ -1,0 +1,52 @@
+apiVersion: v1
+baseDomain: example.lab
+metadata:
+  name: sno1
+imageContentSources:
+- mirrors:
+  - work.ap.vlab:8443/ocp4/openshift4
+  source: quay.io/openshift-release-dev/ocp-release
+- mirrors:
+  - work.ap.vlab:8443/ocp4/openshift4
+  source: quay.io/openshift-release-dev/ocp-v4.0-art-dev
+additionalTrustBundle: |
+  -----BEGIN CERTIFICATE-----
+  MIIDqzCCApOgAwIBAgIURyO8BPZbJDgZWJL86pb7GmuFs2owDQYJKoZIhvcNAQEL
+  BQAwZjELMAkGA1UEBhMCVVMxCzAJBgNVBAgMAlZBMREwDwYDVQQHDAhOZXcgWW9y
+  azENMAsGA1UECgwEUXVheTERMA8GA1UECwwIRGl2aXNpb24xFTATBgNVBAMMDHdv
+  cmsuYXAudmxhYjAeFw0yMjAzMTQxODEwNTBaFw0yNTAxMDExODEwNTBaMGYxCzAJ
+  BgNVBAYTAlVTMQswCQYDVQQIDAJWQTERMA8GA1UEBwwITmV3IFlvcmsxDTALBgNV
+  BAoMBFF1YXkxETAPBgNVBAsMCERpdmlzaW9uMRUwEwYDVQQDDAx3b3JrLmFwLnZs
+  YWIwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDINkPnnQ3H1XTLx0Is
+  dMlcYa/E/FgNLyBGSze8LahWl3pNiwkPXdYAX1oEUVU4l9+T8CuUTNaD42yKUL/A
+  l6u9xbf/5l9DdoH/MZ0B76GOmH+kiixRSYGaJ6V/5Qpedn/RT7ywIpSGAredLPlt
+  HBzFjM8QQ6hM2lwXwrPKNbvEBMoo0DAU9HvTf2tU6kauyjRUwiSq14g8yRNA6Cqh
+  eMb4VGYJ//47KAdFjYNj4g4U4T8rHlBqc1E6sJK2fwZhNog9qZMzP02kq5y9d8Vy
+  gQHSUznSnXWIpWRuxUCpQQggAS6ipy5a+VojqmP2ZAWDQD//GNonivbetxd1+Wqx
+  /hf1AgMBAAGjUTBPMAsGA1UdDwQEAwIC5DATBgNVHSUEDDAKBggrBgEFBQcDATAX
+  BgNVHREEEDAOggx3b3JrLmFwLnZsYWIwEgYDVR0TAQH/BAgwBgEB/wIBATANBgkq
+  hkiG9w0BAQsFAAOCAQEAsOgWx8b1HwVekyeDVmm2Agqs7iI2xILQjGHIvwZj7vXV
+  4doXJNrxEsAQKE9oZBkzXbMjoeotJr1CjhOTRDTpq6w82A74oDAMs0zR1fyJ3Gkw
+  fhO0vmKNiH46/LxWPOivC36zwicgYDLF4lQPtEzMhx8FEzHmrCXC2t56tkkKd92Y
+  If1VbfEPxdP30woHCIwWic4bOljI/Zuj6QC9RJtpw3ru+GZGjr9SlRFy71SpYK7+
+  U2qarT/wzHOB+rLne0CYAKNh/cvV1z+faIVi4LXKxnAMtNzKwp1LxsXghzc/ucMz
+  pax4xHxSseqRE4dha5ej9o2YtvDQj4X/T8KvHLck6A==
+  -----END CERTIFICATE-----
+networking:
+  networkType: OVNKubernetes
+  machineNetwork:
+  - cidr: 192.168.60.0/24
+compute:
+- name: worker
+  replicas: 0
+controlPlane:
+  name: master
+  replicas: 1
+platform:
+  none: {}
+bootstrapInPlace:
+  installationDisk: "--copy-network /dev/sda"
+pullSecret: '{"auths":{"work.ap.vlab:8443":{"auth":"aW5pdDpUYWpuZTEyMw=="}}}'
+sshKey: |
+  ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQC2CvT31CJpcnaoTUjH/G81wnhTgGmdVLRd9PyS0iG63EdGRI9frawWt59WkkBVruTG8v4kQWAJ7mV2xSQ5nBiyEHYgIuO3Y8U+jJkotS6+I33e7osmBqgsvppy7eSpj6pWoX5IC08sYPoNNhrr5h+VmOHfIC3lw+7kr2jVPsfEwFyafoqFzs6llxrqHAQSSX+XJUmeLczSTgUXYVqucXUbwlsLodZcGiEmYhGkC8j2UQReoDPHWe7WjEsk2DCefBgVUOj0osUj/xCHnxEQlFezCMYi+Cq1SKHm9+2039rb8+qYAAWEyIhTPjx1RZi7xLpF0L8BzUW97PVQhq5wDsdepDk+F8BB6qa1FGb7s/DO68PYRAFqswkFdaHTzCn2dhp06RZdt2X0ik/oSVqYjWDkw017bNLOLvbpYRI/NCyt7oAVwsTRAtU5edS+KUD2yijdOH2mGLarWeTi0LVsq3fYPGpaZXJvEV+bhCXr+N/xXvI0R6S1F+a2nTm95iVNeY0= ap@work.ap.vlab
+
