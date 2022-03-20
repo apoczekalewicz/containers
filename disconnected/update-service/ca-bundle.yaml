@@ -1,0 +1,27 @@
+apiVersion: v1
+data:
+  ca-bundle.crt: | 
+    -----BEGIN CERTIFICATE-----
+    MIIDDDCCAfSgAwIBAgIBATANBgkqhkiG9w0BAQsFADAmMSQwIgYDVQQDDBtpbmdy
+    ZXNzLW9wZXJhdG9yQDE2NDc2MzE1MDYwHhcNMjIwMzE4MTkyNTA1WhcNMjQwMzE3
+    MTkyNTA2WjAmMSQwIgYDVQQDDBtpbmdyZXNzLW9wZXJhdG9yQDE2NDc2MzE1MDYw
+    ggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCdFuelVygAD1TmbIrdaINg
+    nbcWS9gfMzZgV6jJd3o9kXtZAvpBwqWDYH5EZ49cVKgoX0USBOy1Mmq4c+QsTfiy
+    wAE7Q8LXlwKCi+++DJObkhTEfLBeXWtMWYoTBCrs0xW3ySyqTBisA8afey6fQOqz
+    Kfz9HNGjfRg2CpDVigx1kbJac60Sdpebwte1RWAUtNidIQrPd1mHALiJH9osQbKI
+    6DfgvVOldLqHA5zjcFWCIb0Om8paltKrLw1QIbysgSDoI6JqemmMWCwbDnQllWGh
+    X10FbFKQeS/QUD/3I6eAzThCQr0yteLt+0XxENb5tU8pKiEKvoyrcrmI4WzQDBaJ
+    AgMBAAGjRTBDMA4GA1UdDwEB/wQEAwICpDASBgNVHRMBAf8ECDAGAQH/AgEAMB0G
+    A1UdDgQWBBSc1CmgZJxZS3JIWx2RBQar5GGizjANBgkqhkiG9w0BAQsFAAOCAQEA
+    Whql5OMZcAQjn6rTwqYfjumUNusmruNVy0LzfVsiF9+Zje017I+gfozGSpyCAA8U
+    kTbqzDaXSsCFrKx+BhTclwM901v9qFyLaa2F3HjXvQ0hIamyOZAUBGRi00FX5gzc
+    YTNaJrxNwKiQm0v83h6e3SR/xfGx8SqXmO9TtW9Lq6rwNaQhOVPTGKxV0Vv+SJg7
+    l2mM5T/lZKnBfQKC55aFkdiHuqWawIAsVw9tGovESJtti5nUy5wmnHGGXjM0vVTs
+    etNEgrn6FHN52YFIrdhgsAToe5Ode+UVhCM0sdF8fZixLMLVy5JjEk75uLqAdcv8
+    8MN6A4Ih5sOO6NRTDbx0xA==
+    -----END CERTIFICATE-----
+ 
+kind: ConfigMap
+metadata:
+  name: user-ca-bundle 
+  namespace: openshift-config 
