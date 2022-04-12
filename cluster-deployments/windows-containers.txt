@@ -1,0 +1,248 @@
+  selfLink: /api/v1/namespaces/openshift-machine-api/secrets/windows-user-data
+  uid: 7e8516e6-b208-4734-8ae8-6be42e5c54ee
+type: Opaque
+[ec2-user@bastion ~]$ oc extract secret/windows-user-data 
+userData
+[ec2-user@bastion ~]$ cat userData 
+<powershell>
+                        Add-WindowsCapability -Online -Name OpenSSH.Server~~~~0.0.1.0
+                        $firewallRuleName = "ContainerLogsPort"
+                        $containerLogsPort = "10250"
+                        New-NetFirewallRule -DisplayName $firewallRuleName -Direction Inbound -Action Allow -Protocol TCP -LocalPort $containerLogsPort -EdgeTraversalPolicy Allow
+                        Set-Service -Name sshd -StartupType ‘Automatic’
+                        Start-Service sshd
+                        $pubKeyConf = (Get-Content -path C:\ProgramData\ssh\sshd_config) -replace '#PubkeyAuthentication yes','PubkeyAuthentication yes'
+                        $pubKeyConf | Set-Content -Path C:\ProgramData\ssh\sshd_config
+                        $passwordConf = (Get-Content -path C:\ProgramData\ssh\sshd_config) -replace '#PasswordAuthentication yes','PasswordAuthentication yes'
+                        $passwordConf | Set-Content -Path C:\ProgramData\ssh\sshd_config
+                        $authorizedKeyFilePath = "$env:ProgramData\ssh\administrators_authorized_keys"
+                        New-Item -Force $authorizedKeyFilePath
+                        echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDJ5blnYEfmdfUGdV2t9cN5/23/qOGbZ5IcOapzP/kMLREbrYlAVifJh9BeaAV6Xmuv1ZnYNrBNNq+Gg4xF3/d6FbP+IJE7/FWc5DVqssRlKZI0kDEBh7evsZpKbQ9bgAER1TcQpfY2dmodfr4nMal4jK+T5NR+9zahJ4xXQunYRu7A3LDoi/doyMQnUROB+y+jp+glP2Wjbj2d2NedvpYpB7UKk59DZrN/M52hRcprH4PfaKGe7k1T+6li3d053tB9nXX4/RRK9w6AWmoGH9YK4afWp9AK41ias9ZZq6Ms+lR50ZsR8dWOnRpbWY6Wwwlp5lSo+V+bNc1aGQrnk17r
+"| Out-File $authorizedKeyFilePath -Encoding ascii
+                        $acl = Get-Acl C:\ProgramData\ssh\administrators_authorized_keys
+                        $acl.SetAccessRuleProtection($true, $false)
+                        $administratorsRule = New-Object system.security.accesscontrol.filesystemaccessrule("Administrators","FullControl","Allow")
+                        $systemRule = New-Object system.security.accesscontrol.filesystemaccessrule("SYSTEM","FullControl","Allow")
+                        $acl.SetAccessRule($administratorsRule)
+                        $acl.SetAccessRule($systemRule)
+                        $acl | Set-Acl
+                        Restart-Service sshd
+                        </powershell>
+                        <persist>true</persist>
+
+
+
+https://gist.githubusercontent.com/suhanime/683ee7b5a2f55c11e3a26a4223170582/raw/d893db98944bf615fccfe73e6e4fb19549a362a5/WinWebServer.yaml
+
+
+
+
+
+
+
+-
+
+sh-4.4$ cat /usr/local/bin/sshcmd.sh 
+#!/bin/bash
+#
+## Vars
+windowshost=${1}
+adminuser=${2}
+sshkey=/tmp/ssh/private-key.pem
+sshargs="-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"
+
+#
+## Check if they provided $1
+[[ ${#windowshost} -eq 0 ]] && echo "Please provide a Windows Hostname or IP Address" && exit 253
+
+#
+## Check if key is present
+[[ ! -f ${sshkey} ]] && echo "FATAL: ${sshkey} not found. This container was deployed wrong." && exit 253
+
+#
+## SSH into the windows host
+/usr/bin/ssh ${sshargs} -i ${sshkey} ${adminuser:=administrator}@${windowshost} powershell
+
+
+-----
+
+
+^C[ec2-user@bastion ~]$ oc get deploy winc-ssh -o yaml 
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    deployment.kubernetes.io/revision: "1"
+  creationTimestamp: "2022-03-09T16:10:21Z"
+  generation: 1
+  labels:
+    app: winc-ssh
+  managedFields:
+  - apiVersion: apps/v1
+    fieldsType: FieldsV1
+    fieldsV1:
+      f:metadata:
+        f:labels:
+          .: {}
+          f:app: {}
+      f:spec:
+        f:progressDeadlineSeconds: {}
+        f:replicas: {}
+        f:revisionHistoryLimit: {}
+        f:selector:
+          f:matchLabels:
+            .: {}
+            f:app: {}
+        f:strategy:
+          f:rollingUpdate:
+            .: {}
+            f:maxSurge: {}
+            f:maxUnavailable: {}
+          f:type: {}
+        f:template:
+          f:metadata:
+            f:labels:
+              .: {}
+              f:app: {}
+          f:spec:
+            f:containers:
+              k:{"name":"winc-ssh-container"}:
+                .: {}
+                f:command: {}
+                f:image: {}
+                f:imagePullPolicy: {}
+                f:name: {}
+                f:resources: {}
+                f:terminationMessagePath: {}
+                f:terminationMessagePolicy: {}
+                f:volumeMounts:
+                  .: {}
+                  k:{"mountPath":"/tmp/ssh"}:
+                    .: {}
+                    f:mountPath: {}
+                    f:name: {}
+                    f:readOnly: {}
+            f:dnsPolicy: {}
+            f:restartPolicy: {}
+            f:schedulerName: {}
+            f:securityContext: {}
+            f:terminationGracePeriodSeconds: {}
+            f:volumes:
+              .: {}
+              k:{"name":"sshkey"}:
+                .: {}
+                f:name: {}
+                f:secret:
+                  .: {}
+                  f:defaultMode: {}
+                  f:secretName: {}
+    manager: OpenAPI-Generator
+    operation: Update
+    time: "2022-03-09T16:10:21Z"
+  - apiVersion: apps/v1
+    fieldsType: FieldsV1
+    fieldsV1:
+      f:metadata:
+        f:annotations:
+          .: {}
+          f:deployment.kubernetes.io/revision: {}
+      f:status:
+        f:availableReplicas: {}
+        f:conditions:
+          .: {}
+          k:{"type":"Available"}:
+            .: {}
+            f:lastTransitionTime: {}
+            f:lastUpdateTime: {}
+            f:message: {}
+            f:reason: {}
+            f:status: {}
+            f:type: {}
+          k:{"type":"Progressing"}:
+            .: {}
+            f:lastTransitionTime: {}
+            f:lastUpdateTime: {}
+            f:message: {}
+            f:reason: {}
+            f:status: {}
+            f:type: {}
+        f:observedGeneration: {}
+        f:readyReplicas: {}
+        f:replicas: {}
+        f:updatedReplicas: {}
+    manager: kube-controller-manager
+    operation: Update
+    time: "2022-03-10T17:31:57Z"
+  name: winc-ssh
+  namespace: openshift-windows-machine-config-operator
+  resourceVersion: "159301"
+  selfLink: /apis/apps/v1/namespaces/openshift-windows-machine-config-operator/deployments/winc-ssh
+  uid: a91f546b-390e-4f64-be3d-e7af225d30d5
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: winc-ssh
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: winc-ssh
+    spec:
+      containers:
+      - command:
+        - /bin/bash
+        - -c
+        - |
+          sleep infinity
+        image: quay.io/redhatworkshops/winc-ssh:latest
+        imagePullPolicy: Always
+        name: winc-ssh-container
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /tmp/ssh
+          name: sshkey
+          readOnly: true
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - name: sshkey
+        secret:
+          defaultMode: 256
+          secretName: cloud-private-key
+
+----------
+
+
+deploy multi apka:
+
+export WSSHKEY=$(oc get secret cloud-private-key -n openshift-windows-machine-config-operator -o jsonpath='{.data.private-key\.pem}')
+export WNODE=$(oc get nodes -l kubernetes.io/os=windows -o jsonpath='{.items[0].metadata.name}')
+
+helm repo add redhat-demos https://redhat-developer-demos.github.io/helm-repo
+helm repo update
+
+helm install ncs --namespace netcandystore \
+--create-namespace --timeout=1200s \
+redhat-demos/netcandystore \
+--set ssh.hostkey=${WSSHKEY} --set ssh.hostname=${WNODE}
+
+lub 
+
+helm install ncs --namespace netcandystore \
+--create-namespace --timeout=1200s \
+redhat-demos/netcandystore \
+--set ssh.hostkey=${WSSHKEY} --set ssh.hostname=${WNODE} \
+--set netcandy.image=quay.io/gfontana/netcandystore:servercore1909

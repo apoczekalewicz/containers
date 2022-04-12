@@ -9,10 +9,10 @@ opm index prune -f registry.redhat.io/redhat/redhat-operator-index:v4.9     -p c
 podman push work.ap.vlab:8443/operators/redhat-operator-index:v4.9
 
 # Zgranie image'ow do lokalnego katalogu:
-oc adm catalog mirror work.ap.vlab:8443/operators/redhat-operator-index:v4.9 file:///local/index -a ../../base/pull-secret.txt --insecure --index-filter-by-os=x86_64
+oc adm catalog mirror work.ap.vlab:8443/operators/redhat-operator-index:v4.9 file:///local/index -a pull-secret.txt --insecure --index-filter-by-os=x86_64
 
 # Zgranie z lokalnego katalogu do priv repo:
-oc adm catalog mirror file://local/index/operators/redhat-operator-index:v4.9  work.ap.vlab:8443/operators -a ~/disconnected/base/pull-secret.txt  --insecure --index-filter-by-os=x86_64
+oc adm catalog mirror file://local/index/operators/redhat-operator-index:v4.9  work.ap.vlab:8443/operators -a pull-secret.txt  --insecure --index-filter-by-os=x86_64
 
 # Stworzone pliki do uzycia w klastrze:
 ls manifests-index/operators/redhat-operator-index-1647298834/
