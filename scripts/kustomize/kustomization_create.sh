@@ -21,7 +21,7 @@ echo "
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
-namespace: 
+namespace: openshift-gitops
 
 commonAnnotations:
   argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
