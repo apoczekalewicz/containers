@@ -32,7 +32,7 @@ then
 
 	for i in "$DIRS"
 	do
-		echo "  - $i"
+		echo "  -$i"
 	done
 fi
 
@@ -44,7 +44,7 @@ then
 
         for i in "$FILES"
         do
-                echo "  - $i"
+                echo "  -$i"
         done
 fi
 
