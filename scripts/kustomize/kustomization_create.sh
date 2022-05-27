@@ -24,27 +24,27 @@ commonAnnotations:
   argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
   argocd.argoproj.io/sync-wave: "2"
 
-"
+" > $FILENAME
 
 if [[ "$DIRS" ]]
 then
-	echo "bases:" 
+	echo "bases:" >> $FILENAME
 
-	for i in "$DIRS"
+	for i in "$DIRS" 
 	do
-		echo "  -$i"
+		echo "  -$i" >> $FILENAME
 	done
 fi
 
-echo ""
+echo "" >> $FILENAME
 
 if [[ "$FILES" ]]
 then
-        echo "resources:" 
+        echo "resources:" >> $FILENAME
 
         for i in "$FILES"
         do
-                echo "  -$i"
+                echo "  -$i" >> $FILENAME
         done
 fi
 
