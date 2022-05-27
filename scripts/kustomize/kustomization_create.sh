@@ -33,9 +33,9 @@ if [[ "$DIRS" ]]
 then
 	echo "bases:" >> $FILENAME
 
-	for i in "$DIRS" 
+	for i in $DIRS
 	do
-		echo "  -$i" >> $FILENAME
+		echo "  - $i" >> $FILENAME
 	done
 fi
 
@@ -45,9 +45,9 @@ if [[ "$FILES" ]]
 then
         echo "resources:" >> $FILENAME
 
-        for i in "$FILES"
+        for i in $FILES
         do
-                echo "  -$i" >> $FILENAME
+                echo "  - $i" >> $FILENAME
         done
 fi
 
