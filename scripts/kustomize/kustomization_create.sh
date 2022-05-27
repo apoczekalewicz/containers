@@ -1,4 +1,7 @@
 #!/bin/bash
+
+FILENAME=kustomization.yaml
+
 if [[ "$#" -eq 0 ]]
 then
 	echo "Usage: $0 <dir|file>..."
