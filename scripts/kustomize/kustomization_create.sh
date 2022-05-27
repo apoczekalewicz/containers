@@ -18,6 +18,8 @@ echo "
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
+namespace: 
+
 commonAnnotations:
   argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
   argocd.argoproj.io/sync-wave: "2"
