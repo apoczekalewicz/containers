@@ -25,7 +25,7 @@ namespace: openshift-gitops
 
 commonAnnotations:
   argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
-  argocd.argoproj.io/sync-wave: "2"
+  argocd.argoproj.io/sync-wave: \"2\"
 
 " > $FILENAME
 
