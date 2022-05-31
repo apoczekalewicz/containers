@@ -17,8 +17,7 @@ done
 echo Files - $FILES
 echo Dirs - $DIRS
 
-echo "
-apiVersion: kustomize.config.k8s.io/v1beta1
+echo "apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 namespace: openshift-gitops
@@ -26,7 +25,6 @@ namespace: openshift-gitops
 commonAnnotations:
   argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
   argocd.argoproj.io/sync-wave: \"2\"
-
 " > $FILENAME
 
 if [[ "$DIRS" ]]
