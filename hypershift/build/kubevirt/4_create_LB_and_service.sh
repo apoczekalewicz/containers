@@ -1,10 +1,11 @@
 . export.sh
-hypershift create kubeconfig > test-kubeconfig
+mkdir -p ./tmp
+hypershift create kubeconfig > ./tmp/kubeconfig
 
-export HTTPS_NODEPORT=$(oc --kubeconfig test-kubeconfig get services -n openshift-ingress router-nodeport-default -o wide | awk '{print $5}' | awk -F "443:" '{print $2}' | awk -F "/" '{print $1}' | tr -d '[:space:]')
+export HTTPS_NODEPORT=$(oc --kubeconfig kubeconfig get services -n openshift-ingress router-nodeport-default -o wide | awk '{print $5}' | awk -F "443:" '{print $2}' | awk -F "/" '{print $1}' | tr -d '[:space:]')
 
 
-cat << EOF > apps-ingress-service.yaml
+cat << EOF > ./tmp/apps-ingress-service.yaml
 apiVersion: v1
 kind: Service
 metadata:
@@ -28,7 +29,7 @@ spec:
   type: ClusterIP
 EOF
 
-cat << EOF > apps-ingress-subdomain-route-443.yaml
+cat << EOF > ./tmp/apps-ingress-subdomain-route-443.yaml
 apiVersion: route.openshift.io/v1
 kind: Route
 metadata:
@@ -47,5 +48,5 @@ spec:
     weight: 100
 EOF
 
-oc create -f apps-ingress-service.yaml
-oc create -f apps-ingress-subdomain-route-443.yaml
+oc create -f ./tmp/apps-ingress-service.yaml
+oc create -f ./tmp/apps-ingress-subdomain-route-443.yaml
