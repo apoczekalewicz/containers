@@ -1,8 +1,7 @@
 . export.sh
 mkdir -p ./tmp
-hypershift create kubeconfig > ./tmp/kubeconfig
 
-export HTTPS_NODEPORT=$(oc --kubeconfig kubeconfig get services -n openshift-ingress router-nodeport-default -o wide | awk '{print $5}' | awk -F "443:" '{print $2}' | awk -F "/" '{print $1}' | tr -d '[:space:]')
+export HTTPS_NODEPORT=$(oc --kubeconfig ./tmp/kubeconfig get services -n openshift-ingress router-nodeport-default -o wide | awk '{print $5}' | awk -F "443:" '{print $2}' | awk -F "/" '{print $1}' | tr -d '[:space:]')
 
 
 cat << EOF > ./tmp/apps-ingress-service.yaml
