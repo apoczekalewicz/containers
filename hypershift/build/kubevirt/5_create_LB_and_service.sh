@@ -35,7 +35,7 @@ metadata:
   name: ${KUBEVIRT_CLUSTER_NAME}-443
   namespace: ${KUBEVIRT_CLUSTER_NAMESPACE}
 spec:
-  host: wildcard.apps.$KUBEVIRT_CLUSTER_BASE_DOMAIN
+  host: data.apps.${KUBEVIRT_CLUSTER_BASE_DOMAIN}
   wildcardPolicy: Subdomain
   tls:
     termination: passthrough
@@ -47,5 +47,5 @@ spec:
     weight: 100
 EOF
 
-oc create -f ./tmp/apps-ingress-service.yaml
-oc create -f ./tmp/apps-ingress-subdomain-route-443.yaml
+oc apply -f ./tmp/apps-ingress-service.yaml
+oc apply -f ./tmp/apps-ingress-subdomain-route-443.yaml
