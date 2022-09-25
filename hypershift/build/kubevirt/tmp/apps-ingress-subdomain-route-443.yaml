@@ -1,0 +1,16 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: nested-443
+  namespace: clusters-nested
+spec:
+  host: apps.nested.apps.zpa.redhat.lab
+  wildcardPolicy: Subdomain
+  tls:
+    termination: passthrough
+  port:
+    targetPort: https-443
+  to:
+    kind: Service
+    name: apps-ingress
+    weight: 100

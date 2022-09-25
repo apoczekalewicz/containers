@@ -35,7 +35,7 @@ metadata:
   name: ${KUBEVIRT_CLUSTER_NAME}-443
   namespace: ${KUBEVIRT_CLUSTER_NAMESPACE}
 spec:
-  host: wildcard.apps.${KUBEVIRT_CLUSTER_BASE_DOMAIN}
+  host: apps.${KUBEVIRT_CLUSTER_BASE_DOMAIN}
   wildcardPolicy: Subdomain
   tls:
     termination: passthrough

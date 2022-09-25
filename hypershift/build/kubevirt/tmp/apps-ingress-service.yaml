@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: nested
+  name: apps-ingress
+  namespace: clusters-nested
+spec:
+  internalTrafficPolicy: Cluster
+  ipFamilies:
+  - IPv4
+  ipFamilyPolicy: SingleStack
+  ports:
+  - name: https-443
+    port: 443
+    protocol: TCP
+    targetPort: 30777
+  selector:
+    kubevirt.io: virt-launcher
+  sessionAffinity: None
+  type: ClusterIP
