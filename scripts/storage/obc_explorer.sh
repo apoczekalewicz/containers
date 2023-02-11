@@ -18,6 +18,9 @@ AWS_ACCESS_KEY_ID=$( oc get secret $SECRET -o jsonpath='{.data.AWS_ACCESS_KEY_ID
 AWS_SECRET_ACCESS_KEY=$( oc get secret $SECRET -o jsonpath='{.data.AWS_SECRET_ACCESS_KEY}' | base64 -d )
 AWS_DEFAULT_REGION=us-west-2
 
+IMAGE="quay.io/redhattraining/aws-cli:2.2.5" # aws client
+#IMAGE="quay.io/apoczeka/container-toolbox:latest" # s4cmd
+
 echo "Info:"
 echo OBJECT_BUCKET_CLAIM: $OBC
 echo OBJECT_BUCKET_NAME: ${OBJECT_BUCKET_NAME}
@@ -37,5 +40,6 @@ oc run --rm -it \
      --env AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION} \
      --env AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} \
      --env AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} \
-     test --image  quay.io/redhattraining/aws-cli:2.2.5 --command -- /bin/bash
+     obcexplorer --image ${IMAGE} --command -- /bin/bash
+
 
