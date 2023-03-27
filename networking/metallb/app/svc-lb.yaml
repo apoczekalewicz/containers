@@ -6,7 +6,7 @@ metadata:
     metallb.universe.tf/address-pool: example1
 spec:
   selector:
-    deployment: example-source
+    deployment: app-info
   ports:
     - port: 8080
       targetPort: 8080
