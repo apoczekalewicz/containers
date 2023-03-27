@@ -48,7 +48,7 @@ spec:
         - name: OPENSHIFT_HA_CONFIG_NAME
           value: "ipfailover"
         - name: OPENSHIFT_HA_VIRTUAL_IPS 
-          value: "1.1.1.1-2"
+          value: "192.168.60.234"
         - name: OPENSHIFT_HA_VIP_GROUPS 
           value: "10"
         - name: OPENSHIFT_HA_NETWORK_INTERFACE 
