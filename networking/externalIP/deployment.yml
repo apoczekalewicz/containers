@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: httpd-demo
+  labels:
+    app: httpd-demo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      deployment: httpd-demo
+  template:
+    metadata:
+      labels:
+        deployment: httpd-demo
+    spec:
+      containers:
+      - env:
+        - name: TEXT
+          value: Hello world!
+        image: registry.access.redhat.com/ubi8/httpd-24
+        imagePullPolicy: IfNotPresent
+        name: httpd-demo
+        ports:
+        - containerPort: 8443
+          protocol: TCP
+        - containerPort: 8080
+          protocol: TCP
+        volumeMounts:
+        - name: index
+          mountPath: /var/www/html
+      volumes:
+      - name: index
+        configMap:
+          name: index-html-configmap
