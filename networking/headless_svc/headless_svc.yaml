@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: app-info
+    app.kubernetes.io/component: app-info
+    app.kubernetes.io/instance: app-info
+  name: app-info-headless
+  namespace: example1
+spec:
+  clusterIP: None
+  ports:
+  - name: 8080-tcp
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+  - name: 8443-tcp
+    port: 8443
+    protocol: TCP
+    targetPort: 8443
+  selector:
+    deployment: app-info
+  type: ClusterIP
+

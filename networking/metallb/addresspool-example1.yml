@@ -1,9 +1,19 @@
-apiVersion: metallb.io/v1alpha1
-kind: AddressPool
+apiVersion: metallb.io/v1beta1
+kind: L2Advertisement
 metadata:
   name: example1
-  namespace: metallb
+  namespace: metallb-system
 spec:
-  protocol: layer2
+  ipAddressPools:
+  - example1
+
+---
+
+apiVersion: metallb.io/v1beta1
+kind: IPAddressPool
+metadata:
+  name: example1
+  namespace: metallb-system
+spec:
   addresses:
-    - 192.168.60.205-192.168.60.208
+  - 192.168.60.205-192.168.60.208
