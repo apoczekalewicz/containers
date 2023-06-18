@@ -67,6 +67,29 @@ spec:
               name: cluster-logging
               source: redhat-operators
               sourceNamespace: openshift-marketplace
+
+
+  - objectDefinition:
+      apiVersion: policy.open-cluster-management.io/v1
+      kind: ConfigurationPolicy
+      metadata:
+        name: policy-cluster-logging-cr
+      spec:
+        remediationAction: enforce # the policy-template spec.remediationAction is overridden by the preceding parameter value for spec.remediationAction.
+        severity: high
+        object-templates:
+        - complianceType: musthave
+          objectDefinition:
+            apiVersion: logging.openshift.io/v1
+            kind: ClusterLogging
+            metadata:
+              name: instance
+              namespace: openshift-logging
+            spec:
+              collection:
+                logs:
+                  type: fluentd
+                  fluentd: {}
 ---
 apiVersion: policy.open-cluster-management.io/v1
 kind: PlacementBinding

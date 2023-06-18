@@ -52,7 +52,6 @@ spec:
                         - application
                       outputRefs:
                         - remote-logs
-                        - default
 ---
 apiVersion: policy.open-cluster-management.io/v1
 kind: PlacementBinding
