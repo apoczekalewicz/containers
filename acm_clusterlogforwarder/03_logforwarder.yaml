@@ -1,0 +1,84 @@
+apiVersion: policy.open-cluster-management.io/v1
+kind: Policy
+metadata:
+  name: policy-logforwarder
+  namespace: demo-acm-policies
+  annotations:
+    policy.open-cluster-management.io/standards: NIST SP 800-53
+    policy.open-cluster-management.io/categories: CM Configuration Management
+    policy.open-cluster-management.io/controls: CM-2 Baseline Configuration
+spec:
+  remediationAction: inform
+  disabled: false
+  policy-templates:
+    - objectDefinition:
+        apiVersion: policy.open-cluster-management.io/v1
+        kind: ConfigurationPolicy
+        metadata:
+          name: policy-logforwarder
+        spec:
+          remediationAction: enforce
+          severity: low
+          namespaceSelector:
+            exclude:
+              - kube-*
+            include:
+              - default
+          object-templates:
+            - complianceType: musthave
+              objectDefinition:
+                apiVersion: logging.openshift.io/v1
+                kind: ClusterLogForwarder
+                metadata:
+                  name: instance
+                  namespace: openshift-logging
+                spec:
+                  outputs:
+                    - name: remote-logs
+                      type: syslog
+                      syslog:
+                        facility: local0
+                        rfc: RFC3164
+                        payloadKey: message
+                        msgID: mymsg
+                        appName: myapp
+                        severity: debug
+                      url: 'tcp://redhat.tv:514'
+                  pipelines:
+                    - name: all-topics
+                      inputRefs:
+                        - audit
+                        - infrastructure
+                        - application
+                      outputRefs:
+                        - remote-logs
+---
+apiVersion: policy.open-cluster-management.io/v1
+kind: PlacementBinding
+metadata:
+  name: binding-policy-logforwarder
+  namespace: demo-acm-policies
+placementRef:
+  name: placement-policy-logforwarder
+  kind: PlacementRule
+  apiGroup: apps.open-cluster-management.io
+subjects:
+  - name: policy-logforwarder
+    kind: Policy
+    apiGroup: policy.open-cluster-management.io
+---
+apiVersion: apps.open-cluster-management.io/v1
+kind: PlacementRule
+metadata:
+  name: placement-policy-logforwarder
+  namespace: demo-acm-policies
+spec:
+  clusterConditions:
+    - status: 'True'
+      type: ManagedClusterConditionAvailable
+  clusterSelector:
+    matchExpressions:
+      - key: remotelogs
+        operator: In
+        values:
+          - "true"
