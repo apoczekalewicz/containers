@@ -43,7 +43,7 @@ spec:
                         msgID: mymsg
                         appName: myapp
                         severity: debug
-                      url: 'udp://redhat.tv:514'
+                      url: 'tcp://redhat.tv:7777'
                   pipelines:
                     - name: all-topics
                       inputRefs:
